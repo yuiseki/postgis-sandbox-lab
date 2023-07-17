@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  postgis:
+    build:
+      context: .
+      dockerfile: docker/postgis/Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    networks:
+      - postgis-sandbox-lab
+  jupyter:
+    build:
+      context: .
+      dockerfile: docker/jupyter/Dockerfile
+    command:
+      - start-notebook.sh
+      - --NotebookApp.token=''
+      - --NotebookApp.disable_check_xsrf=True
+    ports:
+      - 8888:8888
+    environment:
+      JUPYTER_ENABLE_LAB: yes
+    volumes:
+      - jupyter_notebooks:/home/jovyan/work
+    networks:
+      - postgis-sandbox-lab
+
+networks:
+  postgis-sandbox-lab:
+    name: postgis-sandbox-lab
+
+volumes:
+  postgis_data:
+  jupyter_notebooks:
