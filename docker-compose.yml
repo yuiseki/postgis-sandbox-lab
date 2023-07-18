@@ -30,6 +30,7 @@ services:
       JUPYTER_ENABLE_LAB: yes
     volumes:
       - jupyter_notebooks:/home/jovyan/work
+      - ./labs:/home/jovyan/labs
     networks:
       - postgis-sandbox-lab
 
